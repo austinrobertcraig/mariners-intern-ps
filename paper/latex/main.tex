@@ -1,0 +1,73 @@
+
+%%%
+% Any line that begins with a percent symbol is a comment. To compile
+% this document and view the output:
+%
+% Run Latex
+% Run Bibtex
+% Then run Latex twice.
+%
+% This should produce the output PDF file named main.pdf
+%%%
+
+% This defines the style to use for this document.
+% Do not modify.
+\documentclass[letterpaper]{article}
+
+% The following are akin to "import" statements in Python or Java -
+% these import useful commands into the document for you to use.  You
+% don't have to modify any of these lines. The AAAI package formats
+% this document in the style of submissions to the American
+% Association for Artificial Intelligence conference, one of the top
+% AI conferences in the world. You will find that many academic
+% publications in AI use this format.
+\usepackage{aaai}
+\usepackage{times}
+\usepackage{helvet}
+\usepackage{courier}
+\setlength{\pdfpagewidth}{8.5in}
+\setlength{\pdfpageheight}{11in}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{moreverb}
+\usepackage{subfigure}
+\usepackage{epsfig}
+\usepackage{txfonts}
+\usepackage{algpseudocode}
+\usepackage{multirow, multicol}
+\usepackage{url}
+\usepackage{tablefootnote}
+\usepackage{color}
+
+\setcounter{secnumdepth}{1}
+\nocopyright
+
+% Fill in your paper title, names and emails below
+% The "\\" is used to break lines. The \url command
+% is useful for typesetting URLs and email addresses (it uses the
+% Courier font).
+\title{Responses to the Mariners 2025 Analytics Intern Problem Set}
+ \author{Austin Craig\\
+ \url{craiga1@uw.edu}\\
+ University of Washington}
+
+% Start the document
+\begin{document}
+
+\maketitle % formats the title nicely, do not modify
+
+% Begin write-up files
+\input{p1}
+\newpage
+\input{p2}
+\newpage
+\input{p3}
+
+% This creates the references section. Open the project1.bib file to
+% see how to organize your references.
+%\bibliography{project1}
+%\bibliographystyle{aaai} % sets citation and bib style, do not modify
+
+\end{document}
