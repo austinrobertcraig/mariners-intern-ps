@@ -47,43 +47,43 @@ clean_and_save <- function(df, filename) {
             (exit_speed + vert_exit_angle) >= 124 &
             exit_speed >= 98 &
             vert_exit_angle >= 4 &
-            vert_exit_angle <= 50 ~ "barrelled",
+            vert_exit_angle <= 50 ~ 6,
             # solid contact - 5
             (exit_speed * 1.5 - vert_exit_angle) >= 111 &
             (exit_speed + vert_exit_angle) >= 119 &
             exit_speed >= 95 &
             vert_exit_angle >= 0 &
-            vert_exit_angle <= 52 ~ "solid_contact",
+            vert_exit_angle <= 52 ~ 5,
             # flare or burner - 4
             (exit_speed * 2 - vert_exit_angle) >= 87 &
             vert_exit_angle <= 41 &
             (exit_speed * 2 + vert_exit_angle) <= 175 &
             (exit_speed + vert_exit_angle * 1.3) >= 89 &
             exit_speed >= 59 &
-            exit_speed <= 72 ~ "flare_or_burner",
+            exit_speed <= 72 ~ 4,
             # flare or burner - 4
             (exit_speed + vert_exit_angle * 1.3) <= 112 &
             (exit_speed + vert_exit_angle * 1.55) >= 92 &
             exit_speed >= 72 &
-            exit_speed <= 86 ~ "flare_or_burner",
+            exit_speed <= 86 ~ 4,
             # flare or burner - 4
             vert_exit_angle <= 20 &
             (exit_speed + vert_exit_angle * 2.4) >= 98 &
             exit_speed >= 86 &
-            exit_speed <= 95 ~ "flare_or_burner",
+            exit_speed <= 95 ~ 4,
             # flare or burner - 4
             (exit_speed - vert_exit_angle) >= 76 &
             (exit_speed + vert_exit_angle * 2.4) >= 98 &
             exit_speed >= 95 &
-            vert_exit_angle <= 30 ~ "flare_or_burner",
+            vert_exit_angle <= 30 ~ 4,
             # poorly_under - 3
-            (exit_speed + vert_exit_angle * 2) >= 116 ~ "poorly_under",
+            (exit_speed + vert_exit_angle * 2) >= 116 ~ 3,
             # poorly_topped - 2
-            (exit_speed + vert_exit_angle * 2) < 116 ~ "poorly_topped",
+            (exit_speed + vert_exit_angle * 2) < 116 ~ 2,
             # poorly_weak - 1
-            exit_speed <= 59 ~ "poorly_weak",
+            exit_speed <= 59 ~ 1,
             # unclassified - 0
-            .default = "unclassified"
+            .default = 0
             )
         )
 

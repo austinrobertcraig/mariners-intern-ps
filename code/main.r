@@ -43,7 +43,7 @@ ggplot(train_cl, aes(x = vert_exit_angle, y = exit_speed, color = as.factor(barr
     theme_linedraw() +
     scale_color_viridis(
         discrete = TRUE,
-        labels = c("Barrelled", "Flare or Burner", "Poorly (Topped)", "Poorly (Under)", "Solid Contact"),
+        labels = c("Poorly (Topped)", "Poorly (Under)", "Flare or Burner", "Solid Contact", "Barrelled"),
         option = "cividis") +
     labs(
         x = "Vertical Exit Angle (degrees)",
