@@ -26,20 +26,28 @@ test_cl = clean_and_save(test, "test.RData")
 ggplot(train_cl, aes(x = horz_exit_angle)) +
     geom_histogram(data = subset(train_cl, is_airout == 0), alpha = 0.5, aes(fill = factor(is_airout))) +
     geom_histogram(data = subset(train_cl, is_airout == 1), alpha = 0.5, aes(fill = factor(is_airout))) +
-    scale_color_viridis(discrete = TRUE) +
+    scale_fill_viridis(
+        discrete = TRUE,
+        option = "cividis") +
     theme_linedraw() +
     scale_y_continuous(expand = expansion(mult = c(0, .1))) +
-    labs(x = "Horizontal Exit Angle (degrees)", y = "Count of Hit Balls", fill = "Airout")
+    labs(
+        x = "Horizontal Exit Angle (degrees)",
+        y = "Count of Hit Balls",
+        fill = "Airout")
 ggsave(here("output", "figs", "horz_exit_angle_hist.png"))
 
 # Plot exit speed x vert exit angle, colored by barreled status
 ggplot(train_cl, aes(x = vert_exit_angle, y = exit_speed, color = as.factor(barrelled))) +
     geom_point() +
     theme_linedraw() +
-    scale_color_viridis(discrete = TRUE) +
+    scale_color_viridis(
+        discrete = TRUE,
+        labels = c("Barrelled", "Flare or Burner", "Poorly (Topped)", "Poorly (Under)", "Solid Contact"),
+        option = "cividis") +
     labs(
         x = "Vertical Exit Angle (degrees)",
         y = "Exit Speed (mph)",
-        color = "Barreled Classification"
+        color = "Hit Type"
     )
 ggsave(here("output", "figs", "barrelled.png"))
