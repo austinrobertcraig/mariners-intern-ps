@@ -6,14 +6,13 @@
 # Import libraries
 renv::restore()
 library(here)
-library(ggplot2)
-library(dplyr)
+library(tidyverse)
 library(viridis)
 
 # Import project R files
 source(here("code", "build.r"))
 
-# Set seed for reproducability
+# Set seed for reproducibility
 set.seed(116)
 
 # build + clean data
