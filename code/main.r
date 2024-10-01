@@ -7,6 +7,7 @@
 renv::restore()
 library(here)
 library(tidyverse)
+library(tidymodels)
 library(viridis)
 
 # Import project R files
@@ -16,8 +17,8 @@ source(here("code", "build.r"))
 set.seed(116)
 
 # build + clean data
-train = read.csv(here("data", "raw", "data-train.csv"))
-test = read.csv(here("data", "raw", "data-test.csv"))
+train = as_tibble(read.csv(here("data", "raw", "data-train.csv")))
+test = as_tibble(read.csv(here("data", "raw", "data-test.csv")))
 train_cl = clean_and_save(train, "train.RData")    # see "build.r" for this function
 test_cl = clean_and_save(test, "test.RData")
 
@@ -31,5 +32,14 @@ ggplot(train_cl, aes(x = horz_exit_angle)) +
     labs(x = "Horizontal Exit Angle (degrees)", y = "Count of Hit Balls", fill = "Airout")
 ggsave(here("output", "figs", "horz_exit_angle_hist.png"))
 
-ggplot(train_cl, aes(x = exit_speed, y = is_airout)) +
-    geom_point()
+# Plot exit speed x vert exit angle, colored by barreled status
+ggplot(train_cl, aes(x = vert_exit_angle, y = exit_speed, color = as.factor(barrelled))) +
+    geom_point() +
+    theme_linedraw() +
+    scale_color_viridis(discrete = TRUE) +
+    labs(
+        x = "Vertical Exit Angle (degrees)",
+        y = "Exit Speed (mph)",
+        color = "Barreled Classification"
+    )
+ggsave(here("output", "figs", "barrelled.png"))
