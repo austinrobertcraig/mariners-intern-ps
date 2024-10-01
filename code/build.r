@@ -31,14 +31,7 @@ clean_and_save <- function(df, filename) {
         ) %>%
         select(!c(bat_side, pitch_side))
 
-    # barreled
-    # 0 = unclassified
-    # 1 = poorly_weak
-    # 2 = poorly_topped
-    # 3 = poorly_under
-    # 4 = flare_or_burner
-    # 5 = solid_contact
-    # 6 = barrelled
+    # hit type classification
     # see https://fantasy.fangraphs.com/blasts-a-subset-of-barrels/
     df = df %>% mutate(
         barrelled = case_when(
