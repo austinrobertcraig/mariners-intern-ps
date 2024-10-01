@@ -20,14 +20,14 @@ clean_and_save <- function(df, filename) {
 
     # format level as indicator
     df = df %>%
-        mutate(level_A = (level == "A")) %>%
+        mutate(level_A = as.numeric(level == "A")) %>%
         select(!level)
 
     # new vars for bat and pitch handedness
     df = df %>% mutate(
-        right_bat = (bat_side == "R"), 
-        right_pitch = (pitch_side == "R"), 
-        same_handed = (bat_side == pitch_side)
+        right_bat = as.numeric(bat_side == "R"), 
+        right_pitch = as.numeric(pitch_side == "R"), 
+        same_handed = as.numeric(bat_side == pitch_side)
         ) %>%
         select(!c(bat_side, pitch_side))
 
