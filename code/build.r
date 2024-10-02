@@ -31,6 +31,9 @@ clean_and_save <- function(df, filename) {
         ) %>%
         select(!c(bat_side, pitch_side))
 
+    # gen squared horz_exit_angle
+    df = df %>% mutate(horz_exit_angle2 = horz_exit_angle^2)
+
     # hit type classification
     # see https://fantasy.fangraphs.com/blasts-a-subset-of-barrels/
     df = df %>% mutate(
@@ -96,7 +99,7 @@ clean_and_save <- function(df, filename) {
 
     # set of indicators for venue_id
     df = dummy_cols(df, select_columns = "venue_id")
-    df = select(df, !venue_id)
+    #df = select(df, !venue_id)
 
 
     save(df, file = here("data", "derived", filename))

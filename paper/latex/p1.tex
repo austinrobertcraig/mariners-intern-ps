@@ -4,65 +4,35 @@
 
 Text here
 
-% Note the \subsection{} command 
-\subsection{Enumerating}
-\label{subsec:enum}
+\subsection{Data}
+\label{subsec:data}
 
-Create bulleted lists by using the \texttt{itemize} command (see source code):
-\begin{itemize}
-  \item Item 1
-  \item Item 2
-  \item Item 3
-\end{itemize}
-Create numbered lists by using the \texttt{enumerate} command (see source code):
+Notes:
 \begin{enumerate}
-  \item Item 1
-  \item Item 2
-    \begin{enumerate}
-    \item Sub-item 2a
-    \item Sub-item 2b
-    \end{enumerate}
-  \item Item 3
+  \item include horz exit angle as a 2nd-degree polynomial to capture non-linearities. (intuitively: the probability of an airout goes to zero as the ball flies straight into foul territory) - reference histogram
+  \item vertical exit angle and exit speed are more informative when combined. For instance, a ball hit at a relatively high exit angle but low exit speed is much more likely to be a fly out than a ball hit at the same exit angle but with a very high exit speed.
 \end{enumerate}
 
-\subsection{Formatting Mathematics}
-\label{subsec:math}
+\begin{figure}[htb]
+  \includegraphics[width = 0.47\textwidth]{../../output/figs/horz_exit_angle_hist.png}
+  \caption{Count of Hit Balls by Horizontal Exit Angle}
+  \label{fig:hist}
+\end{figure}
 
-Entire books have been written about typesetting mathematics in
-\LaTeX~, so this guide will barely scratch the surface of what's
-possible. But it contains enough information to get you started, with
-pointers to resources where you can learn more. First, the basics: all
-mathematical content needs to be written in ``math-mode'' --- this is
-done by enclosing the content within \$ symbols. For example, the code
-to produce $6x + 2 = 8$ is \texttt{\$6x + 2 = 8\$}. Note that this is
-only good for inline math; if you would like some stand-alone math on
-a separate line, use \emph{two} \$ symbols. For example,
-\texttt{\$\$6x + 2 = 8\$\$} produces: $$6x+2 = 8$$ Here are various
-other useful mathematical symbols and notations --- see the source
-code to see how to produce them.
+\begin{figure}[htb]
+  \includegraphics[width = 0.47\textwidth]{../../output/figs/barrelled.png}
+  \caption{Hit Type by Exit Speed and Vertical Exit Angle}
+  \label{fig:barrelled}
+\end{figure}
 
-\begin{itemize}
-  \item Sub- and super-scripts: $e^{x}, a_{n}, e^{2x+1}, a_{n+2}, f^{i}_{n+1}$
-  \item Common functions: $\log{x}, \sin{x}$
-  \item Greek symbols: $\epsilon, \phi, \pi, \Pi, \Phi$ % capitalizing the first letter produces the upper case letter
-  \item Summations: $\sum_{i=0}^{i=100} i^{2}$ % looks nicer if you typeset it on its own line using $$
-  \item Products: $\prod_{i=0}^{\infty} 2^{-i}$
-  \item Fractions: $3/2$ % prefer this look for inline math
-    $$\frac{x + 5}{2 \cdot \pi}$$\\ % only looks nice when typeset on its own line
-\end{itemize}
+\subsection{Modeling}
+\label{subsec:model}
 
-\noindent Other useful resources:
-\begin{itemize}
-\item Find the \LaTeX~command you're looking for by drawing what you
-  want to produce\footnote{Thanks to Dr. Kate Thompson for pointing me
-    to this resource. Also, this is how you create a footnote. But
-    don't overuse them --- prefer citations and use the
-    acknowledgements section when possible. I usually only use
-    footnotes when I want to include a pointer to a web
-    site.}:\url{http://detexify.kirelabs.org/classify.html}
-\item Ask others: \url{http://tex.stackexchange.com/}
-\item Every \LaTeX~symbol ever:\\ \url{https://goo.gl/Gie24Y}
+Notes here
 
-\end{itemize}
+\subsection{Results}
+\label{subsec:results}
+
+Notes here
 
 
