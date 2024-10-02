@@ -68,17 +68,55 @@ collect_metrics(model1)
 # Model 2: Better Logistic Regression -------------------
 
 # build formula
-xvars = paste("temperature", "inning", "top", "pre_balls",
+xvars_full = paste("temperature", "inning", "top", "pre_balls",
     "pre_strikes", "exit_speed", "hit_spin_rate", "vert_exit_angle",
-    "horz_exit_angle", "horz_exit_angle2", "days_since_open", "level_A", "right_bat",
-    "right_pitch", "same_handed", venues_str, barrelled_str,
+    "horz_exit_angle", "horz_exit_angle2", "extreme_horz_angle",
+    "days_since_open", "level_A",
+    "right_bat", "right_pitch", "same_handed", venues_str, barrelled_str,
+    sep = " + ")
+xvars = paste("temperature", "exit_speed", "hit_spin_rate", "vert_exit_angle",
+    "horz_exit_angle", "horz_exit_angle2", venues_str, barrelled_str,
     sep = " + ")
 formula2 = as.formula(paste("is_airout ~ ", xvars))
 
 # train and evaluate model
 model2 = logit_model(formula2, train_cl)
-collect_metrics(model2)
+test = collect_metrics(model2)
 # accuracy: 0.866
 # log loss: 0.313
 # just adding the squared term on horizontal exit angle reduces log loss from 0.545 to 0.313
 
+# Model 3: Logistic + PCA -------------------
+
+# create df to track log loss by number of components
+components = as_tibble(
+    data.frame(n = seq(1, 40, 5), log_loss = 1)
+    )
+
+# test for optimal number of components
+for (i in 1:nrow(components)) {
+    cat("Step", i)
+    model = logit_pca(train_cl, components$n[i])
+    metrics = collect_metrics(model)
+    # record log-loss
+    components$log_loss[i] = metrics$mean[2]
+}
+
+# draw scatterplot
+optimal_components(components)
+# A consistent log-loss of 0.313 regardless of number of components.
+
+# Model 4: Random Forest ------------------------
+
+# build formula
+# hit_spin_rate is missing from 1297 observations, so exclude here
+xvars = paste("temperature", "exit_speed", "vert_exit_angle",
+    "horz_exit_angle", "horz_exit_angle2", venues_str, barrelled_str,
+    sep = " + ")
+formula4 = as.formula(paste("is_airout ~ ", xvars))
+
+# train and evaluate model
+model4 = rf_model(formula4, train_cl)
+collect_metrics(model4)
+# accuracy: 0.887
+# log loss: 0.259

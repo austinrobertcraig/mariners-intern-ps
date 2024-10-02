@@ -40,3 +40,17 @@ barrelled <- function(df) {
 
     return()
 }
+
+# Scatter plot of optimal number of components for logit
+optimal_components <- function(components) {
+    ggplot(components, aes(x = n, y = log_loss)) +
+        geom_point() +
+        theme_linedraw() +
+        labs(
+            x = "Number of Components",
+            y = "Log-Loss (10-fold CV)"
+        )
+    ggsave(here("output", "figs", "optimal_components.png"))
+
+    return()
+}

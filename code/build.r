@@ -34,6 +34,10 @@ clean_and_save <- function(df, filename) {
     # gen squared horz_exit_angle
     df = df %>% mutate(horz_exit_angle2 = horz_exit_angle^2)
 
+    # gen indicator for extreme horizontal exit angle
+    threshold = 75  #degrees away from dead center considered an "extreme" angle
+    df = df %>% mutate(extreme_horz_angle = as.numeric(abs(horz_exit_angle) > threshold))
+
     # hit type classification
     # see https://fantasy.fangraphs.com/blasts-a-subset-of-barrels/
     df = df %>% mutate(
