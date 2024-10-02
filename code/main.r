@@ -36,7 +36,7 @@ print("Generating figures...")
 horz_exit_angle_hist(train_cl)
 
 # Plot exit speed x vert exit angle, colored by barreled status
-barrelled(train_cl)
+barreled(train_cl)
 print("Done!")
 
 # Formula Strings for Models ---------------------------
@@ -47,8 +47,8 @@ venues = train %>%
     pull(venue_id)
 venues_str = paste("venue_id", venues, sep = "_", collapse = " + ")
 
-# list of barrelled indicator variables
-barrelled_str = paste("barrelled", 0:6, sep = "_", collapse = " + ")
+# list of barreled indicator variables
+barreled_str = paste("barreled", 0:6, sep = "_", collapse = " + ")
 
 # Model 1: Naive Logistic Regression -------------------
 
@@ -72,10 +72,10 @@ xvars_full = paste("temperature", "inning", "top", "pre_balls",
     "pre_strikes", "exit_speed", "hit_spin_rate", "vert_exit_angle",
     "horz_exit_angle", "horz_exit_angle2", "extreme_horz_angle",
     "days_since_open", "level_A",
-    "right_bat", "right_pitch", "same_handed", venues_str, barrelled_str,
+    "right_bat", "right_pitch", "same_handed", venues_str, barreled_str,
     sep = " + ")
 xvars = paste("temperature", "exit_speed", "hit_spin_rate", "vert_exit_angle",
-    "horz_exit_angle", "horz_exit_angle2", venues_str, barrelled_str,
+    "horz_exit_angle", "horz_exit_angle2", venues_str, barreled_str,
     sep = " + ")
 formula2 = as.formula(paste("is_airout ~ ", xvars))
 
@@ -111,7 +111,7 @@ optimal_components(components)
 # build formula
 # hit_spin_rate is missing from 1297 observations, so exclude here
 xvars = paste("temperature", "exit_speed", "vert_exit_angle",
-    "horz_exit_angle", "horz_exit_angle2", venues_str, barrelled_str,
+    "horz_exit_angle", "horz_exit_angle2", venues_str, barreled_str,
     sep = " + ")
 formula4 = as.formula(paste("is_airout ~ ", xvars))
 
@@ -127,13 +127,13 @@ xvars_full = paste("temperature", "inning", "top", "pre_balls",
     "pre_strikes", "exit_speed", "vert_exit_angle",
     "horz_exit_angle", "horz_exit_angle2", "extreme_horz_angle",
     "days_since_open", "level_A",
-    "right_bat", "right_pitch", "same_handed", venues_str, barrelled_str,
+    "right_bat", "right_pitch", "same_handed", venues_str, barreled_str,
     sep = " + ")
 
 # build formula
 # hit_spin_rate is missing from 1297 observations, so exclude here
 xvars = paste("temperature", "exit_speed", "vert_exit_angle",
-    "horz_exit_angle", "horz_exit_angle2", venues_str, barrelled_str,
+    "horz_exit_angle", "horz_exit_angle2", venues_str, barreled_str,
     sep = " + ")
 formula5 = as.formula(paste("is_airout ~ ", xvars))
 

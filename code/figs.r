@@ -23,20 +23,20 @@ horz_exit_angle_hist <- function(df) {
 }
 
 # Hit Type by Exit Speed and Vertical Exit Angle
-barrelled <- function(df) {
-    ggplot(df, aes(x = vert_exit_angle, y = exit_speed, color = as.factor(barrelled))) +
+barreled <- function(df) {
+    ggplot(df, aes(x = vert_exit_angle, y = exit_speed, color = as.factor(barreled))) +
         geom_point() +
         theme_linedraw(base_size = 14) +
         scale_color_viridis(
             discrete = TRUE,
-            labels = c("Poorly (Topped)", "Poorly (Under)", "Flare or Burner", "Solid Contact", "Barrelled"),
+            labels = c("Poorly (Topped)", "Poorly (Under)", "Flare or Burner", "Solid Contact", "Barreled"),
             option = "cividis") +
         labs(
             x = "Vertical Exit Angle (degrees)",
             y = "Exit Speed (mph)",
             color = "Hit Type"
         )
-    ggsave(here("output", "figs", "barrelled.png"))
+    ggsave(here("output", "figs", "barreled.png"))
 
     return()
 }

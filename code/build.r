@@ -41,8 +41,8 @@ clean_and_save <- function(df, filename) {
     # hit type classification
     # see https://fantasy.fangraphs.com/blasts-a-subset-of-barrels/
     df = df %>% mutate(
-        barrelled = case_when(
-            # barrelled - 6
+        barreled = case_when(
+            # barreled - 6
             (exit_speed * 1.5 - vert_exit_angle) >= 117 &
             (exit_speed + vert_exit_angle) >= 124 &
             exit_speed >= 98 &
