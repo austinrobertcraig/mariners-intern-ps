@@ -6,6 +6,7 @@
 
 library(ranger)
 library(kernlab)
+library(LiblineaR)
 
 # Logit regression
 logit_model <- function(formula, df, folds) {
@@ -91,7 +92,7 @@ rf_model <- function(formula, df, folds) {
 
     # build model
     rf_model =
-        rand_forest(trees = 100) %>%
+        rand_forest(trees = 128) %>%
         set_engine("ranger") %>%
         set_mode("classification")
 
@@ -112,7 +113,7 @@ rf_model <- function(formula, df, folds) {
 }
 
 # Linear SVC
-svc_model <- function(formula, df, folds) {
+svc_model <- function(formula, df, folds, cv = TRUE) {
     # build recipe
     svc_rec =
         recipe(formula, data = df) %>%
@@ -127,7 +128,7 @@ svc_model <- function(formula, df, folds) {
     # build model
     svc_model =
         svm_linear(cost = 1) %>%
-        set_engine("kernlab") %>%
+        set_engine("LiblineaR") %>%
         set_mode("classification")
 
     # build workflow
@@ -137,11 +138,17 @@ svc_model <- function(formula, df, folds) {
         add_recipe(svc_rec)
 
     # fit model
-    svc_fit =
-        svc_wkflow %>%
-        fit_resamples(
-            folds,
-            metrics = metric_set(accuracy, mn_log_loss))
+    if (cv) {
+        svc_fit =
+            svc_wkflow %>%
+            fit_resamples(
+                folds,
+                metrics = metric_set(accuracy, mn_log_loss))
+    } else {
+        svc_fit =
+            svc_wkflow %>%
+            fit(data = df)
+    }
 
     return(svc_fit)
 }

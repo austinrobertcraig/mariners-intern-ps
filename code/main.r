@@ -135,10 +135,10 @@ xvars_full = paste("temperature", "inning", "top", "pre_balls",
 xvars = paste("temperature", "exit_speed", "vert_exit_angle",
     "horz_exit_angle", "horz_exit_angle2", venues_str, barrelled_str,
     sep = " + ")
-formula5 = as.formula(paste("is_airout ~ ", xvars_full))
+formula5 = as.formula(paste("is_airout ~ ", xvars))
 
 # train and evaluate model
-model5 = svc_model(formula5, train_cl, folds)
+model5 = svc_model(formula5, train_cl, folds, cv = TRUE)
 collect_metrics(model5)
 # accuracy: 
 # log loss: 
