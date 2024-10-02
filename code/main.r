@@ -104,7 +104,7 @@ for (i in 1:nrow(components)) {
 
 # draw scatterplot
 optimal_components(components)
-# A consistent log-loss of 0.313 regardless of number of components.
+# performs worse across the board than regular logit
 
 # Model 4: Random Forest ------------------------
 
@@ -120,3 +120,25 @@ model4 = rf_model(formula4, train_cl, folds)
 collect_metrics(model4)
 # accuracy: 0.887
 # log loss: 0.259
+
+# Model 5: SVC ------------------------
+
+xvars_full = paste("temperature", "inning", "top", "pre_balls",
+    "pre_strikes", "exit_speed", "vert_exit_angle",
+    "horz_exit_angle", "horz_exit_angle2", "extreme_horz_angle",
+    "days_since_open", "level_A",
+    "right_bat", "right_pitch", "same_handed", venues_str, barrelled_str,
+    sep = " + ")
+
+# build formula
+# hit_spin_rate is missing from 1297 observations, so exclude here
+xvars = paste("temperature", "exit_speed", "vert_exit_angle",
+    "horz_exit_angle", "horz_exit_angle2", venues_str, barrelled_str,
+    sep = " + ")
+formula5 = as.formula(paste("is_airout ~ ", xvars_full))
+
+# train and evaluate model
+model5 = svc_model(formula5, train_cl, folds)
+collect_metrics(model5)
+# accuracy: 
+# log loss: 
