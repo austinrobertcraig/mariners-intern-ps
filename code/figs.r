@@ -11,7 +11,7 @@ horz_exit_angle_hist <- function(df) {
         scale_fill_viridis(
             discrete = TRUE,
             option = "cividis") +
-        theme_linedraw() +
+        theme_linedraw(base_size = 14) +
         scale_y_continuous(expand = expansion(mult = c(0, .1))) +
         labs(
             x = "Horizontal Exit Angle (degrees)",
@@ -26,7 +26,7 @@ horz_exit_angle_hist <- function(df) {
 barrelled <- function(df) {
     ggplot(df, aes(x = vert_exit_angle, y = exit_speed, color = as.factor(barrelled))) +
         geom_point() +
-        theme_linedraw() +
+        theme_linedraw(base_size = 14) +
         scale_color_viridis(
             discrete = TRUE,
             labels = c("Poorly (Topped)", "Poorly (Under)", "Flare or Burner", "Solid Contact", "Barrelled"),
