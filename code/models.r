@@ -7,7 +7,7 @@
 library(ranger)
 
 # Logit regression
-logit_model <- function(formula, df) {
+logit_model <- function(formula, df, folds) {
     # build recipe
     logit_rec =
         recipe(formula, data = df) %>%
@@ -38,7 +38,7 @@ logit_model <- function(formula, df) {
 }
 
 # Logit + PCA
-logit_pca <- function(df, components) {
+logit_pca <- function(df, components, folds) {
     # build recipe
     logit_rec =
         recipe(is_airout ~ ., data = df) %>%
@@ -75,7 +75,7 @@ logit_pca <- function(df, components) {
 }
 
 # Random Forest Model
-rf_model <- function(formula, df) {
+rf_model <- function(formula, df, folds) {
     # build recipe
     rf_rec =
         recipe(formula, data = df) %>%

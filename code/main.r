@@ -60,7 +60,7 @@ xvars = paste("temperature", "inning", "top", "pre_balls",
 formula1 = as.formula(paste("is_airout ~ ", xvars))
 
 # train and evaluate model
-model1 = logit_model(formula1, train_cl)
+model1 = logit_model(formula1, train_cl, folds)
 collect_metrics(model1)
 # accuracy: 0.646
 # log loss: 0.616
@@ -80,7 +80,7 @@ xvars = paste("temperature", "exit_speed", "hit_spin_rate", "vert_exit_angle",
 formula2 = as.formula(paste("is_airout ~ ", xvars))
 
 # train and evaluate model
-model2 = logit_model(formula2, train_cl)
+model2 = logit_model(formula2, train_cl, folds)
 test = collect_metrics(model2)
 # accuracy: 0.866
 # log loss: 0.313
@@ -96,7 +96,7 @@ components = as_tibble(
 # test for optimal number of components
 for (i in 1:nrow(components)) {
     cat("Step", i)
-    model = logit_pca(train_cl, components$n[i])
+    model = logit_pca(train_cl, components$n[i], folds)
     metrics = collect_metrics(model)
     # record log-loss
     components$log_loss[i] = metrics$mean[2]
@@ -116,7 +116,7 @@ xvars = paste("temperature", "exit_speed", "vert_exit_angle",
 formula4 = as.formula(paste("is_airout ~ ", xvars))
 
 # train and evaluate model
-model4 = rf_model(formula4, train_cl)
+model4 = rf_model(formula4, train_cl, folds)
 collect_metrics(model4)
 # accuracy: 0.887
 # log loss: 0.259
