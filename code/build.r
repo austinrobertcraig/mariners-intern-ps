@@ -87,19 +87,19 @@ clean_and_save <- function(df, filename) {
             )
         )
 
-    # set of indicators for barrelled
+    # set of indicators for barreled
     # init set of columns as zeros in case all are missing
     df = df %>%
         add_column(
-            barrelled_0 = 0,
-            barrelled_1 = 0,
-            barrelled_2 = 0,
-            barrelled_3 = 0,
-            barrelled_4 = 0,
-            barrelled_5 = 0,
-            barrelled_6 = 0,
+            barreled_0 = 0,
+            barreled_1 = 0,
+            barreled_2 = 0,
+            barreled_3 = 0,
+            barreled_4 = 0,
+            barreled_5 = 0,
+            barreled_6 = 0,
             )
-    df = dummy_cols(df, select_columns = "barrelled")
+    df = dummy_cols(df, select_columns = "barreled")
 
     # set of indicators for venue_id
     df = dummy_cols(df, select_columns = "venue_id")
