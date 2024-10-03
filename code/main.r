@@ -50,16 +50,26 @@ venues_str = paste("venue_id", venues, sep = "_", collapse = " + ")
 # list of barreled indicator variables
 barreled_str = paste("barreled", 0:6, sep = "_", collapse = " + ")
 
-# Model 1: Naive Logistic Regression -------------------
-
-# build formula
-xvars = paste("temperature", "inning", "top", "pre_balls",
+# string of predictors for formulas
+xvars_naive = paste("temperature", "inning", "top", "pre_balls",
     "pre_strikes", "exit_speed", "hit_spin_rate", "vert_exit_angle",
     "horz_exit_angle", "days_since_open", "level_A", "right_bat",
     "right_pitch", "same_handed", venues_str, sep = " + ")
-formula1 = as.formula(paste("is_airout ~ ", xvars))
 
-# train and evaluate model
+xvars_full = paste("temperature", "inning", "top", "pre_balls",
+    "pre_strikes", "exit_speed", "hit_spin_rate", "vert_exit_angle",
+    "horz_exit_angle", "horz_exit_angle2", "extreme_horz_angle",
+    "days_since_open", "level_A",
+    "right_bat", "right_pitch", "same_handed", venues_str, barreled_str,
+    sep = " + ")
+
+xvars = paste("temperature", "exit_speed", "hit_spin_rate", "vert_exit_angle",
+    "horz_exit_angle", "horz_exit_angle2", venues_str, barreled_str,
+    sep = " + ")
+
+# Model 1: Naive Logistic Regression -------------------
+
+formula1 = as.formula(paste("is_airout ~ ", xvars_naive))
 model1 = logit_model(formula1, train_cl, folds)
 collect_metrics(model1)
 # accuracy: 0.646
@@ -67,19 +77,7 @@ collect_metrics(model1)
 
 # Model 2: Better Logistic Regression -------------------
 
-# build formula
-xvars_full = paste("temperature", "inning", "top", "pre_balls",
-    "pre_strikes", "exit_speed", "hit_spin_rate", "vert_exit_angle",
-    "horz_exit_angle", "horz_exit_angle2", "extreme_horz_angle",
-    "days_since_open", "level_A",
-    "right_bat", "right_pitch", "same_handed", venues_str, barreled_str,
-    sep = " + ")
-xvars = paste("temperature", "exit_speed", "hit_spin_rate", "vert_exit_angle",
-    "horz_exit_angle", "horz_exit_angle2", venues_str, barreled_str,
-    sep = " + ")
 formula2 = as.formula(paste("is_airout ~ ", xvars))
-
-# train and evaluate model
 model2 = logit_model(formula2, train_cl, folds)
 test = collect_metrics(model2)
 # accuracy: 0.866
@@ -108,14 +106,7 @@ optimal_components(components)
 
 # Model 4: Random Forest ------------------------
 
-# build formula
-# hit_spin_rate is missing from 1297 observations, so exclude here
-xvars = paste("temperature", "exit_speed", "vert_exit_angle",
-    "horz_exit_angle", "horz_exit_angle2", venues_str, barreled_str,
-    sep = " + ")
 formula4 = as.formula(paste("is_airout ~ ", xvars))
-
-# train and evaluate model
 model4 = rf_model(formula4, train_cl, folds)
 collect_metrics(model4)
 # accuracy: 0.887
@@ -123,21 +114,7 @@ collect_metrics(model4)
 
 # Model 5: SVC ------------------------
 
-xvars_full = paste("temperature", "inning", "top", "pre_balls",
-    "pre_strikes", "exit_speed", "vert_exit_angle",
-    "horz_exit_angle", "horz_exit_angle2", "extreme_horz_angle",
-    "days_since_open", "level_A",
-    "right_bat", "right_pitch", "same_handed", venues_str, barreled_str,
-    sep = " + ")
-
-# build formula
-# hit_spin_rate is missing from 1297 observations, so exclude here
-xvars = paste("temperature", "exit_speed", "vert_exit_angle",
-    "horz_exit_angle", "horz_exit_angle2", venues_str, barreled_str,
-    sep = " + ")
 formula5 = as.formula(paste("is_airout ~ ", xvars))
-
-# train and evaluate model
 model5 = svc_model(formula5, train_cl, folds, cv = TRUE)
 collect_metrics(model5)
 # accuracy: 

@@ -54,8 +54,8 @@ logit_pca <- function(df, n_components, folds) {
         # in our case, this is just spin_rate
         step_filter_missing(all_numeric(), threshold = 0) %>%
         # apply PCA
-        step_normalize(all_numeric()) %>%
         step_center(all_numeric()) %>%
+        step_normalize(all_numeric()) %>%
         step_pca(all_numeric(), num_comp = n_components)
 
     # build model
@@ -86,6 +86,8 @@ rf_model <- function(formula, df, folds) {
         recipe(formula, data = df) %>%
         # format outcome as factor
         step_mutate(is_airout = as.factor(is_airout)) %>%
+        # remove features with missing values
+        step_filter_missing(all_numeric(), threshold = 0) %>%
         # remove predictors which have the same value for all obs
         step_zv(all_predictors())
 
@@ -120,9 +122,11 @@ svc_model <- function(formula, df, folds, cv = TRUE) {
         step_mutate(is_airout = as.factor(is_airout)) %>%
         # remove predictors which have the same value for all obs
         step_zv(all_predictors()) %>%
+        # remove features with missing values
+        step_filter_missing(all_numeric(), threshold = 0) %>%
         # normalize and center
-        step_center(all_numeric()) %>%
-        step_normalize(all_numeric())
+        step_center(all_numeric_predictors()) %>%
+        step_normalize(all_numeric_predictors())
 
     # build model
     svc_model =
