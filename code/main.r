@@ -22,7 +22,7 @@ set.seed(116)
 
 train = as_tibble(read.csv(here("data", "raw", "data-train.csv")))
 test = as_tibble(read.csv(here("data", "raw", "data-test.csv")))
-train_cl = clean_and_save(train, "train.RData")    # see "build.r" for this function
+train_cl = clean_and_save(train, "train.RData")    # see "build.r"
 test_cl = clean_and_save(test, "test.RData")
 
 # prepare folds for cross-validation
