@@ -52,6 +52,16 @@
       ],
       "Hash": "9f33a1ee37bbe8919eb2ec4b9f2473a5"
     },
+    "LiblineaR": {
+      "Package": "LiblineaR",
+      "Version": "2.10-24",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "methods"
+      ],
+      "Hash": "89cd2362726d615d44896c6e5c2a4e1e"
+    },
     "MASS": {
       "Package": "MASS",
       "Version": "7.3-60.2",
@@ -1058,20 +1068,6 @@
         "methods"
       ],
       "Hash": "4e993b65c2c3ffbffce7bb3e2c6f832b"
-    },
-    "kernlab": {
-      "Package": "kernlab",
-      "Version": "0.9-33",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "grDevices",
-        "graphics",
-        "methods",
-        "stats"
-      ],
-      "Hash": "97d266249d6c3b4f40e34e1ceaf9c558"
     },
     "knitr": {
       "Package": "knitr",

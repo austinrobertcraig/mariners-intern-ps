@@ -5,7 +5,6 @@
 # All functions return a fitted model
 
 library(ranger)
-library(kernlab)
 library(LiblineaR)
 
 # Logit regression
