@@ -81,7 +81,7 @@ formula2 = as.formula(paste("is_airout ~ ", xvars))
 model2 = logit_model(formula2, train_cl, folds)
 collect_metrics(model2)
 # accuracy: 0.868
-# log loss: 0.307
+# log loss: 0.308
 # just adding the squared term on horizontal exit angle reduces log loss from 0.545 to 0.313
 
 # Model 3: Logistic + PCA -------------------

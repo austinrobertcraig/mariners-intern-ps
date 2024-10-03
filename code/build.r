@@ -107,6 +107,15 @@ clean_and_save <- function(df, filename) {
     df = dummy_cols(df, select_columns = "venue_id")
     #df = select(df, !venue_id)
 
+    # impute missing hit_spin_rate at the mean
+    impute_val = mean(df$hit_spin_rate, na.rm = TRUE)
+    df = df %>% mutate(
+        hit_spin_rate = case_when(
+            is.na(hit_spin_rate) ~ impute_val,
+            .default = hit_spin_rate
+            )
+        )
+
 
     save(df, file = here("data", "derived", filename))
     cat("Successfully saved", filename)
