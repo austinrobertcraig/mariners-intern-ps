@@ -17,7 +17,7 @@ First, consider the horizontal exit angle. As shown in Figure \ref{fig:hist}, we
 
 The key variables used to determine whether a fair ball is catchable by an outfielder are vertical exit angle and exit speed. Importantly, these two variables are more informative when combined. For instance, a ball hit at a relatively high exit angle but low exit speed is much more likely to be a fly out than a ball hit at the same exit angle but with a very high exit speed (which may end up in the bleachers instead).
 
-I adapt the Statcast definition of a \textbf{barrel} to account for the differences between different types of hits. Specifically, I categorize hit balls into one of six categories based on a combination of exit angle and exit speed \cite{chamberlain}:
+I adapt the Statcast definition of a \textbf{barrel} to account for different types of hits. Specifically, I categorize hit balls into one of six categories based on a combination of exit angle and exit speed \cite{chamberlain}:
 
 \begin{enumerate}
   \item Poorly hit (weak)
@@ -28,22 +28,24 @@ I adapt the Statcast definition of a \textbf{barrel} to account for the differen
   \item Barreled
 \end{enumerate}
 
-The distribution of these hit types in the training data is shown in Figure \ref{fig:barrelled}. Since the data has been pre-filtered to non-infield plays, we have no observations of poorly hit (weak) balls and only one observation of a poorly hit (topped) ball.
+The distribution of these hit types in the training data is shown in Figure \ref{fig:barreled}. Since the data has been pre-filtered to non-infield plays, we have no observations of poorly hit (weak) balls and only one observation of a poorly hit (topped) ball.
 
 I apply a combination of theory and experimentation (via a 10-fold cross validation procedure) for feature selection. I exclude variables which:
 \begin{enumerate}
   \item Have little theoretical justification for being included in the model, and
   \item Add nothing to the predictive power of the model when they are included.
 \end{enumerate}
-For example, the variable indicating if the hit occurred in the top or bottom of the inning is excluded from most models. There is no clear reason why this variable should affect air out probability, and including it results in no change in the model's performance as measured by accuracy and log-loss score.
+For example, the variable indicating if the hit occurred in the top or bottom of the inning is excluded from most models. There is no clear reason why this variable should affect air out probability, and including does not change the model's performance as measured by accuracy and log-loss score.
 
-Unless mentioned otherwise, the variables included are \textit{temperature, exit\textunderscore speed, hit\textunderscore spin\textunderscore rate, vert\textunderscore exit\textunderscore angle, horz\textunderscore exit\textunderscore angle, horz\textunderscore exit\textunderscore angle2, venue}\footnote{A set of indicator variables corresponding to venue\textunderscore id.}, and \textit{barreled}\footnote{A set of indicator variables corresponding to the hit type variable, described above.}
+Unless mentioned otherwise, the variables included are: temperature, exit speed (and its square), hit spin rate, vertical exit angle, horizontal exit angle (and its square), a set of indicator variables corresponding to unique venues, and a set of indicator variables corresponding to the hit type variable (described above).
+
+Note that hit spin rate has 1297 missing observations (out of 91,553).
 
 
 \begin{figure}[htb]
-  \includegraphics[width = 0.47\textwidth]{../../output/figs/barrelled.png}
+  \includegraphics[width = 0.47\textwidth]{../../output/figs/barreled.png}
   \caption{Hit Type by Exit Speed and Vertical Exit Angle}
-  \label{fig:barrelled}
+  \label{fig:barreled}
 \end{figure}
 
 \subsection{Modeling and Results}

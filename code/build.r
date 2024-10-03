@@ -31,8 +31,10 @@ clean_and_save <- function(df, filename) {
         ) %>%
         select(!c(bat_side, pitch_side))
 
-    # gen squared horz_exit_angle
-    df = df %>% mutate(horz_exit_angle2 = horz_exit_angle^2)
+    # gen squared horz_exit_angle and exit speed
+    df = df %>% mutate(
+        horz_exit_angle2 = horz_exit_angle^2,
+        exit_speed2 = exit_speed^2)
 
     # gen indicator for extreme horizontal exit angle
     threshold = 75  #degrees away from dead center considered an "extreme" angle

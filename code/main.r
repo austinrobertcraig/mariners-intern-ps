@@ -57,15 +57,15 @@ xvars_naive = paste("temperature", "inning", "top", "pre_balls",
     "right_pitch", "same_handed", venues_str, sep = " + ")
 
 xvars_full = paste("temperature", "inning", "top", "pre_balls",
-    "pre_strikes", "exit_speed", "hit_spin_rate", "vert_exit_angle",
-    "horz_exit_angle", "horz_exit_angle2", "extreme_horz_angle",
-    "days_since_open", "level_A",
+    "pre_strikes", "exit_speed", "exit_speed2", "hit_spin_rate", 
+    "vert_exit_angle", "horz_exit_angle", "horz_exit_angle2", 
+    "extreme_horz_angle", "days_since_open", "level_A",
     "right_bat", "right_pitch", "same_handed", venues_str, barreled_str,
     sep = " + ")
 
-xvars = paste("temperature", "exit_speed", "hit_spin_rate", "vert_exit_angle",
-    "horz_exit_angle", "horz_exit_angle2", venues_str, barreled_str,
-    sep = " + ")
+xvars = paste("temperature", "exit_speed", "exit_speed2", "hit_spin_rate",
+    "vert_exit_angle", "horz_exit_angle", "horz_exit_angle2", venues_str,
+    barreled_str, sep = " + ")
 
 # Model 1: Naive Logistic Regression -------------------
 
@@ -79,9 +79,9 @@ collect_metrics(model1)
 
 formula2 = as.formula(paste("is_airout ~ ", xvars))
 model2 = logit_model(formula2, train_cl, folds)
-test = collect_metrics(model2)
-# accuracy: 0.866
-# log loss: 0.313
+collect_metrics(model2)
+# accuracy: 0.868
+# log loss: 0.307
 # just adding the squared term on horizontal exit angle reduces log loss from 0.545 to 0.313
 
 # Model 3: Logistic + PCA -------------------
@@ -110,7 +110,7 @@ formula4 = as.formula(paste("is_airout ~ ", xvars))
 model4 = rf_model(formula4, train_cl, folds)
 collect_metrics(model4)
 # accuracy: 0.887
-# log loss: 0.259
+# log loss: 0.258
 
 # Model 5: SVC ------------------------
 
