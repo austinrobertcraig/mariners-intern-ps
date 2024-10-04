@@ -137,3 +137,88 @@ write_csv(test, here("output", "data-test-final.csv"))
 
 # Question 2: Player analysis ------------------------
 
+# predict which fielder "should" catch the ball
+
+# Step 1: build + train a model on airouts only to predict which fielder will catch it
+player_analysis_df = train_cl %>%
+    filter(is_airout == 1) %>%
+    mutate(
+        first_fielder_pos = case_when(
+            first_fielder == lf_id ~ "lf",
+            first_fielder == cf_id ~ "cf",
+            first_fielder == rf_id ~ "rf"
+        )
+    ) %>%
+    mutate(first_fielder_pos = as.factor(first_fielder_pos))
+
+folds_pos = vfold_cv(player_analysis_df, v = 10)
+xvars_pos = paste("exit_speed", "hit_spin_rate", "vert_exit_angle", "horz_exit_angle", "right_bat", "right_pitch", venues_str, barreled_str, sep = " + ")
+formula_pos = as.formula(paste("first_fielder_pos ~ ", xvars_pos))
+
+model_pos_cv = rf_pos_pred(formula_pos, player_analysis_df, folds_pos)
+collect_metrics(model_pos)
+# accuracy: 0.934
+# log-loss: 0.243
+
+# Step 2: after training the model on airouts, apply it to the whole data set to "fill in" the predicted fielder on plays which were not airouts
+model_pos = rf_pos_pred(formula_pos, player_analysis_df, folds_pos, cv = FALSE)
+preds_pos = predict(model_pos, train_cl)
+train_cl = train_cl %>%
+    add_column(preds_pos) %>%
+    mutate(.pred_class = as.character(.pred_class)) %>%
+    mutate(
+        responsible_fielder = case_when(
+            # if airout, assign first_fielder
+            is_airout == 1 &
+            first_fielder == lf_id ~ "lf",
+            is_airout == 1 &
+            first_fielder == cf_id ~ "cf",
+            is_airout == 1 &
+            first_fielder == rf_id ~ "rf",
+            # if not airout, use predicted fielder
+            .default = .pred_class
+        )
+    ) %>%
+    select(-.pred_class) %>%
+    # identify the responsible player
+    mutate(
+        responsible_fielder_id = case_when(
+            responsible_fielder == "lf" ~ lf_id,
+            responsible_fielder == "cf" ~ cf_id,
+            responsible_fielder == "rf" ~ rf_id
+        )
+    )
+# 938 observed differences between predicted and actual fielders
+
+# get list of distinct players involved in an airout
+players = train_cl %>%
+    distinct(first_fielder) %>%
+    filter(!is.na(first_fielder)) %>%
+    pull(first_fielder)
+
+# calculate each player's Air Outs Above Expected (AOAE):
+aoae = as_tibble(
+    data.frame(player_id = players, aoae = 0)
+    )
+
+for (i in 1:nrow(aoae)) { #nrow(aoae)
+    # train model on all other players, then predict this player's AOAE
+    cat("Player", i)
+    temp_train = train_cl %>%
+        filter(responsible_fielder_id != aoae$player_id[i])
+    temp_test = train_cl %>%
+        filter(responsible_fielder_id == aoae$player_id[i])
+
+    model = rf_model(formula_standard, temp_train, folds, cv = FALSE)
+    preds = predict(model, temp_test)
+    temp_test = temp_test %>%
+        add_column(preds) %>%
+        mutate(
+            is_airout = as.numeric(is_airout) - 1,
+            .pred_class = as.numeric(.pred_class) - 1
+        )
+
+    expected_air_outs = sum(temp_test$.pred_class)
+    actual_air_outs = sum(temp_test$is_airout)
+    aoae$aoae[i] = actual_air_outs - expected_air_outs
+}

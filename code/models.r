@@ -77,6 +77,9 @@ logit_pca <- function(df, n_components, folds) {
 
 # Random Forest Model
 rf_model <- function(formula, df, folds, cv = TRUE) {
+
+    cores = parallel::detectCores()
+
     # build recipe
     rf_rec =
         recipe(formula, data = df) %>%
@@ -88,7 +91,7 @@ rf_model <- function(formula, df, folds, cv = TRUE) {
     # build model
     rf_model =
         rand_forest(trees = 128) %>%
-        set_engine("ranger") %>%
+        set_engine("ranger", num.threads = cores) %>%
         set_mode("classification")
 
     # build workflow
@@ -152,4 +155,42 @@ svc_model <- function(formula, df, folds, cv = TRUE) {
     }
 
     return(svc_fit)
+}
+
+# Random Forest Model to predict fielder
+rf_pos_pred <- function(formula, df, folds, cv = TRUE) {
+    # build recipe
+    rf_rec =
+        recipe(formula, data = df) %>%
+        # remove features with missing values
+        step_filter_missing(all_numeric(), threshold = 0) %>%
+        # remove predictors which have the same value for all obs
+        step_zv(all_predictors())
+
+    # build model
+    rf_model =
+        rand_forest(trees = 128) %>%
+        set_engine("ranger") %>%
+        set_mode("classification")
+
+    # build workflow
+    rf_wkflow =
+        workflow() %>%
+        add_model(rf_model) %>%
+        add_recipe(rf_rec)
+
+    # fit model
+    if (cv) {
+        rf_fit =
+            rf_wkflow %>%
+            fit_resamples(
+                folds,
+                metrics = metric_set(accuracy, mn_log_loss))
+    } else {
+        rf_fit =
+            rf_wkflow %>%
+            fit(data = df)
+    }
+
+    return(rf_fit)
 }
