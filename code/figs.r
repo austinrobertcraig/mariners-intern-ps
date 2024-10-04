@@ -54,3 +54,22 @@ optimal_components <- function(components) {
 
     return()
 }
+
+# Scatter plot of AOAE, highlighting player 15411
+aoae_scatter <- function(df) {
+
+    p_15411 = df %>% filter(player_id == 15411)
+
+    ggplot(df, aes(x = actual_ao, y = expected_ao)) +
+        geom_point() +
+        theme_linedraw() +
+        labs(
+            x = "Air Outs",
+            y = "Expected Air Outs"
+        ) +
+        geom_point(
+            data = p_15411,
+            color = "red", size = 3, shape = "circle open"
+        )
+    ggsave(here("output", "figs", "aoae.png"))
+}

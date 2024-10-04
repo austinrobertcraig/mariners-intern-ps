@@ -191,7 +191,7 @@ players = train_cl %>%
 
 # calculate each player's Air Outs Above Expected (AOAE):
 aoae = as_tibble(
-    data.frame(player_id = players, aoae = 0)
+    data.frame(player_id = players, expected_ao = 0, actual_ao = 0, aoae = 0)
     )
 
 for (i in 1:nrow(aoae)) { #nrow(aoae)
@@ -213,5 +213,10 @@ for (i in 1:nrow(aoae)) { #nrow(aoae)
 
     expected_air_outs = sum(temp_test$.pred_class)
     actual_air_outs = sum(temp_test$is_airout)
+
+    aoae$expected_ao[i] = expected_air_outs
+    aoae$actual_ao[i] = actual_air_outs
     aoae$aoae[i] = actual_air_outs - expected_air_outs
 }
+
+# Plot results
