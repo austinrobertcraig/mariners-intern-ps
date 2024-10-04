@@ -149,7 +149,7 @@ xvars_pos = paste("exit_speed", "hit_spin_rate", "vert_exit_angle", "horz_exit_a
 formula_pos = as.formula(paste("first_fielder_pos ~ ", xvars_pos))
 
 model_pos_cv = rf_pos_pred(formula_pos, player_analysis_df, folds_pos)
-collect_metrics(model_pos)
+collect_metrics(model_pos_cv)
 # accuracy: 0.934
 # log-loss: 0.243
 
