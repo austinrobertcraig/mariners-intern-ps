@@ -194,30 +194,48 @@ aoae = as_tibble(
     data.frame(player_id = players, expected_ao = 0, actual_ao = 0, aoae = 0)
     )
 
-for (i in 1:nrow(aoae)) { #nrow(aoae)
+for (i in 1:nrow(aoae)) {
     # train model on all other players, then predict this player's AOAE
-    cat("Player", i)
+    cat("Player", i, "/", nrow(aoae), "\n")
     temp_train = train_cl %>%
         filter(responsible_fielder_id != aoae$player_id[i])
     temp_test = train_cl %>%
         filter(responsible_fielder_id == aoae$player_id[i])
 
     model = rf_model(formula_standard, temp_train, folds, cv = FALSE)
-    preds = predict(model, temp_test)
+
+    # collect actual predictions to calculate expected AO,
+    # and collect probabilities to calculate AOAE
+    preds = predict(model, temp_test) %>%
+        rename(pred_airout = .pred_class)
+    preds_prob = predict(model, temp_test, type = "prob") %>%
+        # .pred_1 is the useful column
+        select(prob_airout = .pred_1)
+
     temp_test = temp_test %>%
         add_column(preds) %>%
+        add_column(preds_prob) %>%
         mutate(
             is_airout = as.numeric(is_airout) - 1,
-            .pred_class = as.numeric(.pred_class) - 1
-        )
+            pred_airout = as.numeric(pred_airout) - 1
+        ) %>%
+        # generate a score for each hit event
+        mutate(score = is_airout - prob_airout)
 
-    expected_air_outs = sum(temp_test$.pred_class)
-    actual_air_outs = sum(temp_test$is_airout)
+    # record this player's stats
+    aoae$expected_ao[i] = sum(temp_test$pred_airout)
+    aoae$actual_ao[i] = sum(temp_test$is_airout)
+    aoae$aoae[i] = mean(temp_test$score)
 
-    aoae$expected_ao[i] = expected_air_outs
-    aoae$actual_ao[i] = actual_air_outs
-    aoae$aoae[i] = actual_air_outs - expected_air_outs
+    # save the detailed info on our player of interest
+    if (aoae$player_id[i] == 15411) {
+        fielding_events_15411 = temp_test
+    }
 }
+
+# save data
+save(aoae, file = here("data", "derived", "aoae.RData"))
+save(fielding_events_15411, file = here("data", "derived", "fielding_events_15411.RData"))
 
 # Plot results
 aoae_scatter(aoae)

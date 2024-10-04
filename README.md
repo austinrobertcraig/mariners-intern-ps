@@ -1,17 +1,8 @@
 # Mariners 2025 Analytics Intern Problem Set
 
 ## Notes and Todo
-- exit speed (and maybe hit spin and vert exit angle?) likely quadratic. Lower exit speeds = bloopers/foul balls
-- horizontal exit angle can be used to catch foul balls.
-    - horz_exit_angle ranges from about -180 to 180, with 0 apparently being dead center field.
-    - When filtering only caught fly balls in the training data, horz_exit_angle is on the interval [-69.86, 60.18]
-    - Improve power by immediately classifying anything outside [-90,90] (conservatively) as a ball? Even a ball hit with a ton of spin is not going to make it back to be catchable by an outfielder.
+- **The csv needs probabilities, not predictions**
 - Useful statcast definitions: https://www.mlb.com/glossary/statcast/barrel
-
-## Potential Extensions
-- Biometric data, data on fielder positions
-- Pitch/pitcher information. Pitch thrown, speed of pitch, location of pitch.
-- 
 
 
 ## File Structure

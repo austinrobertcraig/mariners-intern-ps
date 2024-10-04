@@ -118,6 +118,9 @@ rf_model <- function(formula, df, folds, cv = TRUE) {
 
 # Random Forest Model to predict fielder
 rf_pos_pred <- function(formula, df, folds, cv = TRUE) {
+
+    cores = parallel::detectCores()
+
     # build recipe
     rf_rec =
         recipe(formula, data = df) %>%
@@ -129,7 +132,7 @@ rf_pos_pred <- function(formula, df, folds, cv = TRUE) {
     # build model
     rf_model =
         rand_forest(trees = 128) %>%
-        set_engine("ranger") %>%
+        set_engine("ranger", num.threads = cores) %>%
         set_mode("classification")
 
     # build workflow
