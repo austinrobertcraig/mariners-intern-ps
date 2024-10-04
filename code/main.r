@@ -25,6 +25,9 @@ test = as_tibble(read.csv(here("data", "raw", "data-test.csv")))
 train_cl = clean_and_save(train, "train.RData")    # see "build.r"
 test_cl = clean_and_save(test, "test.RData")
 
+# format outcome as factor
+train_cl = train_cl %>% mutate(is_airout = as.factor(is_airout))
+
 # prepare folds for cross-validation
 folds = vfold_cv(train_cl, v = 10)
 
@@ -67,18 +70,21 @@ xvars = paste("temperature", "exit_speed", "exit_speed2", "hit_spin_rate",
     "vert_exit_angle", "horz_exit_angle", "horz_exit_angle2", venues_str,
     barreled_str, sep = " + ")
 
+# create formulas
+formula_naive = as.formula(paste("is_airout ~ ", xvars_naive))
+formula_full = as.formula(paste("is_airout ~ ", xvars_full))
+formula_standard = as.formula(paste("is_airout ~ ", xvars))
+
 # Model 1: Naive Logistic Regression -------------------
 
-formula1 = as.formula(paste("is_airout ~ ", xvars_naive))
-model1 = logit_model(formula1, train_cl, folds)
+model1 = logit_model(formula_naive, train_cl, folds)
 collect_metrics(model1)
 # accuracy: 0.646
 # log loss: 0.616
 
 # Model 2: Better Logistic Regression -------------------
 
-formula2 = as.formula(paste("is_airout ~ ", xvars))
-model2 = logit_model(formula2, train_cl, folds)
+model2 = logit_model(formula_standard, train_cl, folds)
 collect_metrics(model2)
 # accuracy: 0.868
 # log loss: 0.308
@@ -106,16 +112,28 @@ optimal_components(components)
 
 # Model 4: Random Forest ------------------------
 
-formula4 = as.formula(paste("is_airout ~ ", xvars))
-model4 = rf_model(formula4, train_cl, folds)
+model4 = rf_model(formula_standard, train_cl, folds)
 collect_metrics(model4)
 # accuracy: 0.887
 # log loss: 0.258
 
-# Model 5: SVC ------------------------
+# Model 5: SVC ----------------------------------
 
-formula5 = as.formula(paste("is_airout ~ ", xvars))
-model5 = svc_model(formula5, train_cl, folds, cv = TRUE)
+model5 = svc_model(formula_standard, train_cl, folds, cv = TRUE)
 collect_metrics(model5)
 # accuracy: 
 # log loss: 
+
+# Train the best model and predict p_airout ------------------------
+
+final_model = rf_model(formula_standard, train_cl, folds, cv = FALSE)
+preds = predict(final_model, test_cl)
+test = test %>%
+    add_column(preds) %>%
+    mutate(p_airout = .pred_class) %>%
+    select(-.pred_class)
+
+write_csv(test, here("output", "data-test-final.csv"))
+
+# Question 2: Player analysis ------------------------
+

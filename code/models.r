@@ -12,8 +12,6 @@ logit_model <- function(formula, df, folds) {
     # build recipe
     logit_rec =
         recipe(formula, data = df) %>%
-        # format outcome as factor
-        step_mutate(is_airout = as.factor(is_airout)) %>%
         # remove predictors which have the same value for all obs
         step_zv(all_predictors())
 
@@ -43,8 +41,6 @@ logit_pca <- function(df, n_components, folds) {
     # build recipe
     logit_rec =
         recipe(is_airout ~ ., data = df) %>%
-        # format outcome as factor
-        step_mutate(is_airout = as.factor(is_airout)) %>%
         # remove non-informative variables
         step_select(-ends_with("_id")) %>%
         step_select(-"first_fielder") %>%
@@ -80,12 +76,10 @@ logit_pca <- function(df, n_components, folds) {
 }
 
 # Random Forest Model
-rf_model <- function(formula, df, folds) {
+rf_model <- function(formula, df, folds, cv = TRUE) {
     # build recipe
     rf_rec =
         recipe(formula, data = df) %>%
-        # format outcome as factor
-        step_mutate(is_airout = as.factor(is_airout)) %>%
         # remove features with missing values
         step_filter_missing(all_numeric(), threshold = 0) %>%
         # remove predictors which have the same value for all obs
@@ -104,11 +98,17 @@ rf_model <- function(formula, df, folds) {
         add_recipe(rf_rec)
 
     # fit model
-    rf_fit =
-        rf_wkflow %>%
-        fit_resamples(
-            folds,
-            metrics = metric_set(accuracy, mn_log_loss))
+    if (cv) {
+        rf_fit =
+            rf_wkflow %>%
+            fit_resamples(
+                folds,
+                metrics = metric_set(accuracy, mn_log_loss))
+    } else {
+        rf_fit =
+            rf_wkflow %>%
+            fit(data = df)
+    }
 
     return(rf_fit)
 }
@@ -118,8 +118,6 @@ svc_model <- function(formula, df, folds, cv = TRUE) {
     # build recipe
     svc_rec =
         recipe(formula, data = df) %>%
-        # format outcome as factor
-        step_mutate(is_airout = as.factor(is_airout)) %>%
         # remove predictors which have the same value for all obs
         step_zv(all_predictors()) %>%
         # remove features with missing values
