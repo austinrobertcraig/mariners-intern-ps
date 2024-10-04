@@ -117,13 +117,6 @@ collect_metrics(model4)
 # accuracy: 0.887
 # log loss: 0.258
 
-# Model 5: SVC ----------------------------------
-
-model5 = svc_model(formula_standard, train_cl, folds, cv = TRUE)
-collect_metrics(model5)
-# accuracy: 
-# log loss: 
-
 # Train the best model and predict p_airout ------------------------
 
 final_model = rf_model(formula_standard, train_cl, folds, cv = FALSE)

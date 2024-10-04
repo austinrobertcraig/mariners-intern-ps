@@ -116,47 +116,6 @@ rf_model <- function(formula, df, folds, cv = TRUE) {
     return(rf_fit)
 }
 
-# Linear SVC
-svc_model <- function(formula, df, folds, cv = TRUE) {
-    # build recipe
-    svc_rec =
-        recipe(formula, data = df) %>%
-        # remove predictors which have the same value for all obs
-        step_zv(all_predictors()) %>%
-        # remove features with missing values
-        step_filter_missing(all_numeric(), threshold = 0) %>%
-        # normalize and center
-        step_center(all_numeric_predictors()) %>%
-        step_normalize(all_numeric_predictors())
-
-    # build model
-    svc_model =
-        svm_linear(cost = 1) %>%
-        set_engine("LiblineaR") %>%
-        set_mode("classification")
-
-    # build workflow
-    svc_wkflow =
-        workflow() %>%
-        add_model(svc_model) %>%
-        add_recipe(svc_rec)
-
-    # fit model
-    if (cv) {
-        svc_fit =
-            svc_wkflow %>%
-            fit_resamples(
-                folds,
-                metrics = metric_set(accuracy, mn_log_loss))
-    } else {
-        svc_fit =
-            svc_wkflow %>%
-            fit(data = df)
-    }
-
-    return(svc_fit)
-}
-
 # Random Forest Model to predict fielder
 rf_pos_pred <- function(formula, df, folds, cv = TRUE) {
     # build recipe
