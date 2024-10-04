@@ -220,3 +220,5 @@ for (i in 1:nrow(aoae)) { #nrow(aoae)
 }
 
 # Plot results
+aoae_scatter(aoae)
+aoae %>% filter(player_id == 15411)
