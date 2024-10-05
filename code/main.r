@@ -9,6 +9,8 @@ library(here)
 library(tidyverse)
 library(tidymodels)
 library(viridis)
+library(sandwich)
+library(lmtest)
 
 # Import project R files
 source(here("code", "build.r"))
@@ -225,7 +227,8 @@ for (i in 1:nrow(aoae)) {
     # record this player's stats
     aoae$expected_ao[i] = sum(temp_test$pred_airout)
     aoae$actual_ao[i] = sum(temp_test$is_airout)
-    aoae$aoae[i] = mean(temp_test$score)
+    # Mean Air Outs Above Expected
+    aoae$maoae[i] = mean(temp_test$score)
 
     # save the detailed info on our player of interest
     if (aoae$player_id[i] == 15411) {
@@ -233,10 +236,62 @@ for (i in 1:nrow(aoae)) {
     }
 }
 
+# normalize and center mAOAE
+aoae = aoae %>%
+    mutate(maoae_normalized = (maoae - mean(maoae)) / sd(maoae))
+
 # save data
 save(aoae, file = here("data", "derived", "aoae.RData"))
 save(fielding_events_15411, file = here("data", "derived", "fielding_events_15411.RData"))
 
 # Plot results
 aoae_scatter(aoae)
+aoae_box(aoae)
 aoae %>% filter(player_id == 15411)
+
+# What day waas the player transfered to level A?
+min(fielding_events_15411 %>%
+    filter(level_A == 1) %>%
+    pull(days_since_open)
+)
+#29 days since opening, or May 5, 2023
+
+# How did the player transition between levels A and B?
+score_a = fielding_events_15411 %>%
+    filter(level_A == 1) %>%
+    pull(score)
+# mean score at level A: 0.022
+
+score_b = fielding_events_15411 %>%
+    filter(level_A == 0) %>%
+    pull(score)
+# mean score at level B: 0.050
+
+t.test(score_a, score_b)
+# pval = 0.65 -> no signficiant drop in performance
+
+# is there an adjustment period?
+score_time_trend = lm(
+    score ~ days_since_open + level_A + days_since_open:level_A,
+    data = fielding_events_15411
+    )
+coeftest(score_time_trend, vcov = vcovHC(score_time_trend, type = "HC3"))
+
+ggplot(fielding_events_15411, aes(x = days_since_open, y = score, color = is_airout)) +
+    geom_point() +
+    geom_vline(xintercept = 29) +
+    scale_color_viridis(option = "turbo")
+
+# Does the player struggle with certain types of hits?
+fielding_events_15411 = fielding_events_15411 %>%
+    mutate(barreled = as.factor(barreled))
+
+barreled_anova = aov(score ~ barreled, data = fielding_events_15411)
+summary(barreled_anova)
+# pval = 0.00443
+
+ggplot(fielding_events_15411, aes(x = days_since_open, y = score, color = barreled)) +
+    geom_point() +
+    geom_vline(xintercept = 29) +
+    scale_color_viridis(discrete = TRUE, option = "turbo") +
+    theme_linedraw()

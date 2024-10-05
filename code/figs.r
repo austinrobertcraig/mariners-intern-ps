@@ -3,6 +3,8 @@
 # Author: Austin Craig
 # Description: Contains functions which create the plots included in write-up.
 
+library(ggrepel)
+
 # Histgram: Count of Hit Balls by Exit Angle, grouped by air out
 horz_exit_angle_hist <- function(df) {
     ggplot(df, aes(x = horz_exit_angle)) +
@@ -60,16 +62,44 @@ aoae_scatter <- function(df) {
 
     p_15411 = df %>% filter(player_id == 15411)
 
-    ggplot(df, aes(x = actual_ao, y = expected_ao)) +
+    ggplot(df, aes(y = actual_ao, x = expected_ao)) +
         geom_point() +
         theme_linedraw() +
         labs(
-            x = "Air Outs",
-            y = "Expected Air Outs"
+            y = "Air Outs",
+            x = "Expected Air Outs"
         ) +
         geom_point(
             data = p_15411,
             color = "red", size = 3, shape = "circle open"
+        ) +
+        geom_text_repel(
+            data = p_15411,
+            aes(label = player_id)
+        ) +
+        geom_abline(
+            intercept = 0,
+            slope = 1,
+            color = "grey"
         )
-    ggsave(here("output", "figs", "aoae.png"))
+    ggsave(here("output", "figs", "aoae_scatter.png"))
+}
+
+# Box plot of normalized mAOAE, highlighting player 15411
+aoae_box <- function(df) {
+    p_15411 = df %>%
+        filter(player_id == 15411) %>%
+        mutate(yvar = 0)
+
+    ggplot(df, aes(x = maoae_normalized)) +
+        geom_boxplot(alpha = 0.05) +
+        labs(
+            x = "Normalized mAOAE"
+        ) +
+        geom_point(
+            data = p_15411,
+            color = "red",
+            aes(x = maoae_normalized, y = yvar)
+        )
+    ggsave(here("output", "figs", "aoae_box.png"))
 }
