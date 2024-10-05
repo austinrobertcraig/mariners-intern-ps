@@ -69,8 +69,7 @@ xvars_full = paste("temperature", "inning", "top", "pre_balls",
     sep = " + ")
 
 xvars = paste("temperature", "exit_speed", "exit_speed2", "hit_spin_rate",
-    "vert_exit_angle", "horz_exit_angle", "horz_exit_angle2", "right_bat", "right_pitch", venues_str,
-    barreled_str, sep = " + ")
+    "vert_exit_angle", "horz_exit_angle", "horz_exit_angle2", "right_bat", "right_pitch", venues_str, barreled_str, sep = " + ")
 
 # create formulas
 formula_naive = as.formula(paste("is_airout ~ ", xvars_naive))
@@ -295,3 +294,6 @@ ggplot(fielding_events_15411, aes(x = days_since_open, y = score, color = barrel
     geom_vline(xintercept = 29) +
     scale_color_viridis(discrete = TRUE, option = "turbo") +
     theme_linedraw()
+
+ggplot(fielding_events_15411, aes(x = barreled)) +
+    geom_bar()
