@@ -244,7 +244,6 @@ save(aoae, file = here("data", "derived", "aoae.RData"))
 save(fielding_events_15411, file = here("data", "derived", "fielding_events_15411.RData"))
 
 # Plot results
-aoae_scatter(aoae)
 aoae_box(aoae)
 aoae %>% filter(player_id == 15411)
 

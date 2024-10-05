@@ -57,34 +57,6 @@ optimal_components <- function(components) {
     return()
 }
 
-# Scatter plot of AOAE, highlighting player 15411
-aoae_scatter <- function(df) {
-
-    p_15411 = df %>% filter(player_id == 15411)
-
-    ggplot(df, aes(y = actual_ao, x = expected_ao)) +
-        geom_point() +
-        theme_linedraw() +
-        labs(
-            y = "Air Outs",
-            x = "Expected Air Outs"
-        ) +
-        geom_point(
-            data = p_15411,
-            color = "red", size = 3, shape = "circle open"
-        ) +
-        geom_text_repel(
-            data = p_15411,
-            aes(label = player_id)
-        ) +
-        geom_abline(
-            intercept = 0,
-            slope = 1,
-            color = "grey"
-        )
-    ggsave(here("output", "figs", "aoae_scatter.png"))
-}
-
 # Box plot of normalized mAOAE, highlighting player 15411
 aoae_box <- function(df) {
     p_15411 = df %>%
