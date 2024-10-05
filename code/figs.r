@@ -57,23 +57,67 @@ optimal_components <- function(components) {
     return()
 }
 
-# Box plot of normalized mAOAE, highlighting player 15411
+# Box plot of mAOAE, highlighting player 15411
 aoae_box <- function(df) {
     p_15411 = df %>%
         filter(player_id == 15411) %>%
         mutate(yvar = 0)
 
-    ggplot(df, aes(x = maoae_normalized)) +
-        geom_boxplot(alpha = 0.05) +
+    ggplot(df, aes(x = maoae)) +
+        geom_boxplot(alpha = 0.05, width = 0.2) +
         labs(
-            x = "Normalized mAOAE"
+            x = "mAOAE"
         ) +
         geom_point(
             data = p_15411,
             color = "red",
-            aes(x = maoae_normalized, y = yvar)
+            size = 3,
+            aes(x = maoae, y = yvar)
+        ) +
+        geom_text_repel(
+            data = p_15411,
+            aes(x = maoae, y = yvar, label = player_id),
+            nudge_y = 0.01
+        ) +
+        theme_linedraw(base_size = 16) +
+        ylim(-0.2, 0.2) +
+        theme(
+            axis.text.y = element_blank(),
+            axis.title.y = element_blank()
         )
     ggsave(here("output", "figs", "aoae_box.png"))
+}
+
+# Density plot of mAOAE, highlighting player 15411
+aoae_density <- function(df) {
+    p_15411 = df %>%
+        filter(player_id == 15411)
+
+    ggplot(df, aes(x = maoae)) +
+        geom_density(alpha = 0.05, fill = "blue") +
+        labs(
+            x = "mAOAE",
+            y = "Density"
+        ) +
+        geom_vline(xintercept = p_15411$maoae) +
+        theme_linedraw(base_size = 16)
+    ggsave(here("output", "figs", "aoae_density.png"))
+}
+
+# Empirical CDF plot of mAOAE, highlighting player 15411
+aoae_ecdf <- function(df) {
+    p_15411 = df %>%
+        filter(player_id == 15411)
+
+    ggplot(df, aes(x = maoae)) +
+        stat_ecdf(geom = "step") +
+        labs(
+            x = "mAOAE",
+            y = "ECDF"
+        ) +
+        geom_vline(xintercept = p_15411$maoae) +
+        theme_linedraw(base_size = 16)
+    ggsave(here("output", "figs", "aoae_ecdf.png"))
 }
 
 # Bar Chart of Player 15411's performance vs hit type

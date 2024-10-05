@@ -243,9 +243,20 @@ aoae = aoae %>%
 save(aoae, file = here("data", "derived", "aoae.RData"))
 save(fielding_events_15411, file = here("data", "derived", "fielding_events_15411.RData"))
 
+# limit analysis to players with at least 10 air outs (roughly 25th percentile)
+aoae = aoae %>%
+    filter(actual_ao >= 10)
+
 # Plot results
-aoae_box(aoae)
-aoae %>% filter(player_id == 15411)
+aoae_density(aoae)
+aoae_ecdf(aoae)
+player_15411 = aoae %>% filter(player_id == 15411)
+# mAOAE of 0.0261
+
+# Calculate this player's percentile of mAOAE
+ecdf_fn = ecdf(aoae$maoae)
+percentile_15411 = ecdf_fn(player_15411$maoae)
+percentile_15411    # 83rd percentile
 
 # What day waas the player transfered to level A?
 min(fielding_events_15411 %>%
