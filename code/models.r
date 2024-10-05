@@ -12,6 +12,8 @@ logit_model <- function(formula, df, folds) {
     # build recipe
     logit_rec =
         recipe(formula, data = df) %>%
+        # interaction term for hit speed x exit angle
+        step_interact(terms = hit_speed:vert_exit_angle) %>%
         # remove predictors which have the same value for all obs
         step_zv(all_predictors())
 
@@ -83,6 +85,8 @@ rf_model <- function(formula, df, folds, cv = TRUE) {
     # build recipe
     rf_rec =
         recipe(formula, data = df) %>%
+        # interaction term for hit speed x exit angle
+        step_interact(terms = hit_speed:vert_exit_angle) %>%
         # remove features with missing values
         step_filter_missing(all_numeric(), threshold = 0) %>%
         # remove predictors which have the same value for all obs

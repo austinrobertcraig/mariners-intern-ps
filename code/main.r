@@ -69,7 +69,7 @@ xvars_full = paste("temperature", "inning", "top", "pre_balls",
     sep = " + ")
 
 xvars = paste("temperature", "exit_speed", "exit_speed2", "hit_spin_rate",
-    "vert_exit_angle", "horz_exit_angle", "horz_exit_angle2", venues_str,
+    "vert_exit_angle", "horz_exit_angle", "horz_exit_angle2", "right_bat", "right_pitch", venues_str,
     barreled_str, sep = " + ")
 
 # create formulas
@@ -116,8 +116,8 @@ optimal_components(components)
 
 model4 = rf_model(formula_standard, train_cl, folds)
 collect_metrics(model4)
-# accuracy: 0.887
-# log loss: 0.258
+# accuracy: 0.892
+# log loss: 0.248
 
 # Train the best model and predict p_airout ------------------------
 

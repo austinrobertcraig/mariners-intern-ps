@@ -37,7 +37,7 @@ I apply a combination of theory and experimentation (via a 10-fold cross validat
 \end{enumerate}
 For example, the variable indicating if the hit occurred in the top or bottom of the inning is excluded from most models. There is no clear reason why this variable should affect air out probability, and including does not change the model's performance as measured by accuracy and log-loss score.
 
-Unless mentioned otherwise, the variables included are: temperature, exit speed (and its square), hit spin rate, vertical exit angle, horizontal exit angle (and its square), a set of indicator variables corresponding to unique venues, and a set of indicator variables corresponding to the hit type variable (described above).
+Unless mentioned otherwise, the variables included are: temperature, exit speed (and its square), hit spin rate, vertical exit angle, horizontal exit angle (and its square), the interaction between vertical exit angle and hit speed, indicators for if the batter and pitcher are right-handed, a set of indicator variables corresponding to unique venues, and a set of indicator variables corresponding to the hit type variable (described above).
 
 Note that hit spin rate has 1297 missing observations (out of 91,553). In the interest of maximizing the amount of training data available, I impute the missing values at the mean value of 2902.84.
 
