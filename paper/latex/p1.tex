@@ -17,7 +17,7 @@ First, consider the horizontal exit angle. As shown in Figure \ref{fig:hist}, we
 
 The key variables used to determine whether a fair ball is catchable by an outfielder are vertical exit angle and exit speed. Importantly, these two variables are more informative when combined. For instance, a ball hit at a relatively high exit angle but low exit speed is much more likely to be a fly out than a ball hit at the same exit angle but with a very high exit speed (which may end up in the bleachers instead).
 
-I adapt the Statcast definition of a \textbf{barrel} to account for different types of hits. Specifically, I categorize hit balls into one of six categories based on a combination of exit angle and exit speed \cite{chamberlain}:
+I adapt the Statcast definition of a \textbf{barrel} to account for different types of hits. Specifically, I categorize hit balls into one of six categories based on a combination of exit angle and exit speed \cite{metzelaar}:
 
 \begin{enumerate}
   \item Poorly hit (weak)
@@ -56,8 +56,8 @@ I apply three different machine learning procedures to predict the probability o
 \subsection{Extensions}
 \label{subsec:results}
 
-There are several ways I would expand upon the analysis presented here given more time and resources. First, I would be interested in incorporating more detailed location and weather data. Temperature is a good start, but I would like to tie each venue\_id and game date to local conditions including humidity, wind direction, wind speed, and if the venue is indoors.
+There are several ways I would expand upon the analysis presented here given more time and resources. First, I would be interested in incorporating more detailed location and weather data. Temperature is a good start, but I would like to tie each venue\_id and game date to local conditions including humidity, wind direction, wind speed, and an indicator for if the venue is indoors.
 
 Second, I would like to investigate hit spin rate in more detail. It is difficult to know how hit spin rate will affect the distance a ball travels, and thus the likelihood of an air out, without also knowing if it is backspin, topspin, or side spin.
 
-Finally, incorporating data on player positioning could produce interesting results. This would likely also interact with the handedness of the batter and pitcher, increasing the amount of useful data I could incorporate into the model.
+Finally, incorporating data on player positioning could produce interesting results. This would likely also interact with the handedness of the batter and pitcher, increasing the amount of useful variation I could incorporate into the model.

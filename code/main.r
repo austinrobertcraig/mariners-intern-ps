@@ -295,5 +295,5 @@ ggplot(fielding_events_15411, aes(x = days_since_open, y = score, color = barrel
     scale_color_viridis(discrete = TRUE, option = "turbo") +
     theme_linedraw()
 
-ggplot(fielding_events_15411, aes(x = barreled)) +
-    geom_bar()
+# plot
+hit_type_15411(fielding_events_15411)

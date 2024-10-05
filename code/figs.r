@@ -31,7 +31,7 @@ barreled <- function(df) {
         theme_linedraw(base_size = 14) +
         scale_color_viridis(
             discrete = TRUE,
-            labels = c("Poorly (Topped)", "Poorly (Under)", "Flare or Burner", "Solid Contact", "Barreled"),
+            labels = c("Poorly (Topped)", "Poorly (Under)", "Flare or Burner", "Solid Contact", "Barrel"),
             option = "cividis") +
         labs(
             x = "Vertical Exit Angle (degrees)",
@@ -102,4 +102,40 @@ aoae_box <- function(df) {
             aes(x = maoae_normalized, y = yvar)
         )
     ggsave(here("output", "figs", "aoae_box.png"))
+}
+
+# Bar Chart of Player 15411's performance vs hit type
+hit_type_15411 <- function(df) {
+    barreled_scores = df %>%
+        group_by(barreled) %>%
+        summarize(
+            avg_score = mean(score)
+        ) %>%
+        mutate(barreled_desc = case_when(
+            barreled == 3 ~ "Poorly Hit (Under)",
+            barreled == 4 ~ "Flare or Burner",
+            barreled == 5 ~ "Solid Contact",
+            barreled == 6 ~ "Barrel"
+        )) %>%
+        mutate(barreled = as.numeric(barreled))
+
+    ggplot(barreled_scores) +
+        geom_bar(
+            aes(x = reorder(barreled_desc, barreled), y = avg_score, fill = avg_score),
+            stat = "identity") +
+        theme_classic(base_size = 16) +
+        theme(legend.position = "none") +
+        labs(
+            x = "Hit Type",
+            y = "mAOAE"
+        ) +
+        scale_fill_viridis(option = "cividis") +
+        geom_text(
+            aes(x = reorder(barreled_desc, barreled), y = avg_score, label = round(avg_score, 3),
+            vjust = ifelse(avg_score < 0, 1.5, -0.5)
+            )
+        ) +
+        geom_hline(yintercept = 0, size = 1)
+
+    ggsave(here("output", "figs", "hit_type_15411.png"))
 }
