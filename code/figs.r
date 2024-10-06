@@ -155,3 +155,17 @@ hit_type_15411 <- function(df) {
 
     ggsave(here("output", "figs", "hit_type_15411.png"))
 }
+
+score_plot_15411 <- function(df) {
+    ggplot(df, aes(x = days_since_open, y = score)) +
+        geom_smooth() +
+        geom_vline(xintercept = 29) +
+        geom_hline(yintercept = 0) +
+        theme_linedraw(base_size = 16) +
+        labs(
+            x = "Day of Season",
+            y = "Score"
+        )
+
+    ggsave(here("output", "figs", "score_plot_15411.png"))
+}

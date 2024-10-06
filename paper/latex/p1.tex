@@ -53,6 +53,12 @@ Note that hit spin rate has 1297 missing observations (out of 91,553). In the in
 
 I apply three different machine learning procedures to predict the probability of an air out in the test data: logistic regression, logistic regression with principal component analysis (PCA), and a random forest model.
 
+As a baseline, I train a "naive" logistic regression model on a simple set of regressors which does not include squared terms, venue indicators, or hit type indicators. This model performs poorly with a log-loss of 0.616.
+
+The logistic regression model using the full set of predictors performs significantly better, with an accuracy score of 0.868 and a log-loss of 0.308. Using principal component analysis before training the model does not improve predictive power.
+
+I trained the random forest model on 128 trees. This model performs best, with an accuracy score of 0.892 and a log-loss of 0.248. This is the model I use to make predictions on the test data and to generate a fielding score for use in question 2.
+
 \subsection{Extensions}
 \label{subsec:results}
 

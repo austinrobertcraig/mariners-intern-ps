@@ -285,11 +285,9 @@ score_time_trend = lm(
     data = fielding_events_15411
     )
 coeftest(score_time_trend, vcov = vcovHC(score_time_trend, type = "HC3"))
+# direction suggests player performed better in B, but nothing significant
 
-ggplot(fielding_events_15411, aes(x = days_since_open, y = score, color = is_airout)) +
-    geom_point() +
-    geom_vline(xintercept = 29) +
-    scale_color_viridis(option = "turbo")
+score_plot_15411(fielding_events_15411)
 
 # Does the player struggle with certain types of hits?
 fielding_events_15411 = fielding_events_15411 %>%
@@ -298,12 +296,6 @@ fielding_events_15411 = fielding_events_15411 %>%
 barreled_anova = aov(score ~ barreled, data = fielding_events_15411)
 summary(barreled_anova)
 # pval = 0.00443
-
-ggplot(fielding_events_15411, aes(x = days_since_open, y = score, color = barreled)) +
-    geom_point() +
-    geom_vline(xintercept = 29) +
-    scale_color_viridis(discrete = TRUE, option = "turbo") +
-    theme_linedraw()
 
 # plot
 hit_type_15411(fielding_events_15411)
