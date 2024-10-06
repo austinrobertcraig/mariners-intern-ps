@@ -8,7 +8,6 @@ renv::restore()
 library(here)
 library(tidyverse)
 library(tidymodels)
-library(viridis)
 library(sandwich)
 library(lmtest)
 
@@ -61,38 +60,29 @@ xvars_naive = paste("temperature", "inning", "top", "pre_balls",
     "horz_exit_angle", "days_since_open", "level_A", "right_bat",
     "right_pitch", "same_handed", venues_str, sep = " + ")
 
-xvars_full = paste("temperature", "inning", "top", "pre_balls",
-    "pre_strikes", "exit_speed", "exit_speed2", "hit_spin_rate", 
-    "vert_exit_angle", "horz_exit_angle", "horz_exit_angle2", 
-    "extreme_horz_angle", "days_since_open", "level_A",
-    "right_bat", "right_pitch", "same_handed", venues_str, barreled_str,
-    sep = " + ")
-
 xvars = paste("temperature", "exit_speed", "exit_speed2", "hit_spin_rate",
     "vert_exit_angle", "horz_exit_angle", "horz_exit_angle2", "right_bat", "right_pitch", venues_str, barreled_str, sep = " + ")
 
 # create formulas
 formula_naive = as.formula(paste("is_airout ~ ", xvars_naive))
-formula_full = as.formula(paste("is_airout ~ ", xvars_full))
 formula_standard = as.formula(paste("is_airout ~ ", xvars))
 
-# Model 1: Naive Logistic Regression -------------------
+# Run Models -------------------------------------------
 
+# Model 1: Naive Logistic Regression
 model1 = logit_model(formula_naive, train_cl, folds)
 collect_metrics(model1)
 # accuracy: 0.646
 # log loss: 0.616
 
-# Model 2: Better Logistic Regression -------------------
-
+# Model 2: Better Logistic Regression
 model2 = logit_model(formula_standard, train_cl, folds)
 collect_metrics(model2)
 # accuracy: 0.868
 # log loss: 0.308
 # just adding the squared term on horizontal exit angle reduces log loss from 0.545 to 0.313
 
-# Model 3: Logistic + PCA -------------------
-
+# Model 3: Logistic + PCA
 # create df to track log loss by number of components
 components = as_tibble(
     data.frame(n = seq(1, 40, 5), log_loss = 1)
@@ -111,14 +101,13 @@ for (i in 1:nrow(components)) {
 optimal_components(components)
 # performs worse across the board than regular logit
 
-# Model 4: Random Forest ------------------------
-
+# Model 4: Random Forest
 model4 = rf_model(formula_standard, train_cl, folds)
 collect_metrics(model4)
 # accuracy: 0.892
 # log loss: 0.248
 
-# Train the best model and predict p_airout ------------------------
+# Train the best model and predict p_airout ------------
 
 final_model = rf_model(formula_standard, train_cl, folds, cv = FALSE)
 preds = predict(final_model, test_cl, type = "prob") %>%
@@ -131,7 +120,7 @@ test = test %>%
 
 write_csv(test, here("output", "data-test-final.csv"))
 
-# Question 2: Player analysis ------------------------
+# Question 2: Player analysis --------------------------
 
 # predict which fielder "should" catch the ball
 

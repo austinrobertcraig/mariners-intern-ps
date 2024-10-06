@@ -3,6 +3,7 @@
 # Author: Austin Craig
 # Description: Contains functions which create the plots included in write-up.
 
+library(viridis)
 library(ggrepel)
 
 # Histgram: Count of Hit Balls by Exit Angle, grouped by air out
@@ -55,37 +56,6 @@ optimal_components <- function(components) {
     ggsave(here("output", "figs", "optimal_components.png"))
 
     return()
-}
-
-# Box plot of mAOAE, highlighting player 15411
-aoae_box <- function(df) {
-    p_15411 = df %>%
-        filter(player_id == 15411) %>%
-        mutate(yvar = 0)
-
-    ggplot(df, aes(x = maoae)) +
-        geom_boxplot(alpha = 0.05, width = 0.2) +
-        labs(
-            x = "mAOAE"
-        ) +
-        geom_point(
-            data = p_15411,
-            color = "red",
-            size = 3,
-            aes(x = maoae, y = yvar)
-        ) +
-        geom_text_repel(
-            data = p_15411,
-            aes(x = maoae, y = yvar, label = player_id),
-            nudge_y = 0.01
-        ) +
-        theme_linedraw(base_size = 16) +
-        ylim(-0.2, 0.2) +
-        theme(
-            axis.text.y = element_blank(),
-            axis.title.y = element_blank()
-        )
-    ggsave(here("output", "figs", "aoae_box.png"))
 }
 
 # Density plot of mAOAE, highlighting player 15411
@@ -156,6 +126,7 @@ hit_type_15411 <- function(df) {
     ggsave(here("output", "figs", "hit_type_15411.png"))
 }
 
+# plot trend line of player 15411's score over time
 score_plot_15411 <- function(df) {
     ggplot(df, aes(x = days_since_open, y = score)) +
         geom_smooth() +
