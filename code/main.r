@@ -235,10 +235,6 @@ for (i in 1:nrow(aoae)) {
     }
 }
 
-# normalize and center mAOAE
-aoae = aoae %>%
-    mutate(maoae_normalized = (maoae - mean(maoae)) / sd(maoae))
-
 # save data
 save(aoae, file = here("data", "derived", "aoae.RData"))
 save(fielding_events_15411, file = here("data", "derived", "fielding_events_15411.RData"))
