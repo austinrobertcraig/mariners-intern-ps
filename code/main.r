@@ -121,11 +121,13 @@ collect_metrics(model4)
 # Train the best model and predict p_airout ------------------------
 
 final_model = rf_model(formula_standard, train_cl, folds, cv = FALSE)
-preds = predict(final_model, test_cl)
+preds = predict(final_model, test_cl, type = "prob") %>%
+        # .pred_1 is the useful column
+        select(.pred_1)
 test = test %>%
     add_column(preds) %>%
-    mutate(p_airout = .pred_class) %>%
-    select(-.pred_class)
+    mutate(p_airout = .pred_1) %>%
+    select(-.pred_1)
 
 write_csv(test, here("output", "data-test-final.csv"))
 
