@@ -135,7 +135,7 @@ score_plot_15411 <- function(df) {
         theme_linedraw(base_size = 16) +
         labs(
             x = "Day of Season",
-            y = "Score"
+            y = "mAOAE"
         )
 
     ggsave(here("output", "figs", "score_plot_15411.png"))

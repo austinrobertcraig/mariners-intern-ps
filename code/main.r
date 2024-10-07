@@ -72,13 +72,13 @@ formula_standard = as.formula(paste("is_airout ~ ", xvars))
 # Model 1: Naive Logistic Regression
 model1 = logit_model(formula_naive, train_cl, folds)
 collect_metrics(model1)
-# accuracy: 0.646
-# log loss: 0.616
+# accuracy: 0.685
+# log loss: 0.575
 
 # Model 2: Better Logistic Regression
 model2 = logit_model(formula_standard, train_cl, folds)
 collect_metrics(model2)
-# accuracy: 0.868
+# accuracy: 0.869
 # log loss: 0.308
 # just adding the squared term on horizontal exit angle reduces log loss from 0.545 to 0.313
 
@@ -104,8 +104,8 @@ optimal_components(components)
 # Model 4: Random Forest
 model4 = rf_model(formula_standard, train_cl, folds)
 collect_metrics(model4)
-# accuracy: 0.892
-# log loss: 0.248
+# accuracy: 0.893
+# log loss: 0.246
 
 # Train the best model and predict p_airout ------------
 
@@ -183,7 +183,7 @@ players = train_cl %>%
 
 # calculate each player's Air Outs Above Expected (AOAE):
 aoae = as_tibble(
-    data.frame(player_id = players, expected_ao = 0, actual_ao = 0, aoae = 0)
+    data.frame(player_id = players, expected_ao = 0, actual_ao = 0, maoae = 0)
     )
 
 for (i in 1:nrow(aoae)) {
@@ -238,7 +238,7 @@ aoae = aoae %>%
 aoae_density(aoae)
 aoae_ecdf(aoae)
 player_15411 = aoae %>% filter(player_id == 15411)
-# mAOAE of 0.0261
+# mAOAE of 0.0247
 
 # Calculate this player's percentile of mAOAE
 ecdf_fn = ecdf(aoae$maoae)
