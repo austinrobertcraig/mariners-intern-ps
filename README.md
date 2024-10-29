@@ -1,4 +1,4 @@
-# Mariners 2025 Analytics Intern Problem Set
+# Work Sample: Mariners 2025 Analytics Intern Problem Set
 
 This project was completed as part of the application process for the 2025 Mariners Analytics Internship.
 
